@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<form action="https://sheetdb.io/api/v1/1jwqwqut84n86" method="post" id="sheetdb-form">
+    <div class="container">
+        <h1>Registration Form</h1>
+        <hr>
+
+        <label for="f_name"><b>First Name</b></label>
+        <input type="text" placeholder="Enter First Name" name="data[f_name]" id="f_name" required pattern="[a-zA-Z]{3,15}">
+
+        <label for="l_name"><b>Last Name</b></label>
+        <input type="text" placeholder="Enter Last Name" name="data[l_name]" id="l_name" required pattern="[a-zA-Z]{3,15}">
+
+        <label for="phone_no"><b>Phone No</b></label>
+        <input type="tel" placeholder="Enter Phone No" name="data[phone_no]" id="phone_no" required pattern="[6-9]{1}[0-9]{9}">
+
+        <label for="email"><b>Email</b></label>
+        <input type="email" placeholder="Enter Email" name="data[email]" id="email" required>
+
+        <label for="dob"><b>DOB</b></label>
+        <input type="date" name="data[dob]" id="dob" required onchange="calculateAge()">
+
+        <label for="age"><b>Age</b></label>
+        <input type="number" name="data[age]" id="age" disabled>
+
+        <label for="clg"><b>College name</b></label>
+        <input type="text" placeholder="Enter College Name" name="data[clg]" id="clg" required>
+
+        <p><b>Gender</b></p>
+        <div class="gender-container">
+            <label for="gender_m">Male</label>
+            <input type="radio" name="data[gender]" id="gender_m" value="M" required>
+            
+            <label for="gender_f">Female</label>
+            <input type="radio" name="data[gender]" id="gender_f" value="F" required>
+
+            <label for="gender_c">Custom</label>
+            <input type="radio" name="data[gender]" id="gender_c" value="C" required>
+        </div>
+
+        <p>By submitting this form, you agree to our <a href="#" style="color: dodgerblue">Terms & Privacy</a>.</p>
+
+        <div class="clearfix">
+            <button type="button" class="cancelbtn">Cancel</button>
+            <button type="submit" class="signupbtn" onclick="enableAge()">Submit</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function validateForm() {
+        var dob = new Date(document.getElementById('dob').value);
+        var today = new Date();
+
+        if (dob > today || isNaN(dob)) {
+            alert("Please enter a valid Date of Birth.");
+            return false;
+        }
+
+        return true;
+    }
+
+    function calculateAge() {
+        var dob = new Date(document.getElementById('dob').value);
+        var today = new Date();
+        var age = today.getFullYear() - dob.getFullYear();
+
+        if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        document.getElementById('age').value = age;
+    }
+
+    function enableAge() {
+        document.getElementById('age').removeAttribute('disabled');
+    }
+
+    document.getElementById('sheetdb-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        if (validateForm()) {
+            var form = document.getElementById('sheetdb-form');
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    window.location.href = 'success.html';
+                } else {
+                    alert('Failed to submit the form.');
+                }
+            })
+            .catch(function(error) {
+                alert('An error occurred while submitting the form.');
+                console.error('Error:', error);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
